@@ -1,10 +1,12 @@
 package com.devsuperior.movieflix.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_movie")
@@ -18,13 +20,14 @@ public class Movie implements Serializable {
 	private String subTitle;
 	private int year;
 	private String imgUrl;
-	@Column(length = 1000)
+	@Column(columnDefinition = "Text")
 	private String synopsis;
 
 	@ManyToOne
 	@JoinColumn(name = "genre_id")
 	private Genre genre;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "movie")
 	private List<Review> reviews = new ArrayList<>();
 	
@@ -32,8 +35,7 @@ public class Movie implements Serializable {
 		
 	}
 
-	public Movie(Long id, String title, String subTitle, String synopsis, int year, String imgUrl, Genre genre,
-			List<Review> reviews) {
+	public Movie(Long id, String title, String subTitle, String synopsis, int year, String imgUrl, Genre genre) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -42,7 +44,6 @@ public class Movie implements Serializable {
 		this.year = year;
 		this.imgUrl = imgUrl;
 		this.genre = genre;
-		this.reviews = reviews;
 	}
 
 	public Long getId() {
@@ -103,10 +104,6 @@ public class Movie implements Serializable {
 
 	public List<Review> getReviews() {
 		return reviews;
-	}
-
-	public void setReviews(List<Review> reviews) {
-		this.reviews = reviews;
 	}
 
 	@Override
